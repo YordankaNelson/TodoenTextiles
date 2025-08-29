@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Producto - Y&N</title>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .section-p1 {
+            padding: 40px 80px;
+        }
+
+        /* Header y navegación */
+        #header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 80px;
+            background-color: #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+            z-index: 999;
+            position: sticky;
+            top: 0;
+            left: 0;
+        }
+
+        .logo {
+            width: 120px;
+        }
+
+        #back-btn {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #1a1a1a;
+            font-weight: 600;
+            transition: 0.3s ease;
+        }
+
+        #back-btn i {
+            margin-right: 5px;
+            font-size: 18px;
+        }
+
+        #back-btn:hover {
+            color: #088178;
+        }
+
+        /* Detalles del producto */
+        #prodetails {
+            display: flex;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        #prodetails .single-pro-image {
+            width: 40%;
+            margin-right: 50px;
+        }
+
+        #prodetails .single-pro-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #prodetails .single-pro-details {
+            width: 50%;
+            padding-top: 30px;
+        }
+
+        #prodetails .single-pro-details h4 {
+            padding: 10px 0 20px 0;
+            font-size: 28px;
+            color: #1a1a1a;
+            border-bottom: 1px solid #e1e1e1;
+            margin-bottom: 20px;
+        }
+
+        #prodetails .single-pro-details h5 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #bf3154;
+        }
+
+        #prodetails .single-pro-details span {
+            line-height: 25px;
+            color: #465b52;
+        }
+
+        #prodetails .single-pro-details .product-detail-item {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        #prodetails .single-pro-details .product-detail-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Muestra de color */
+        .color-sample {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .color-swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 2px solid #ddd;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-info {
+            flex: 1;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #fff;
+            padding: 40px 80px;
+            margin-top: 40px;
+            border-top: 1px solid #e1e1e1;
+        }
+
+        footer .col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        footer .logo {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+
+        footer h4 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+
+        footer p {
+            margin: 0 0 10px 0;
+            color: #465b52;
+        }
+
+        footer .icon {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        footer .icon a {
+            color: #465b52;
+            font-size: 20px;
+            transition: 0.3s ease;
+        }
+
+        footer .icon a:hover {
+            color: #bf3154;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 20px;
+            color: #465b52;
+            border-top: 1px solid #e1e1e1;
+            padding-top: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 799px) {
+            .section-p1 {
+                padding: 40px;
+            }
+            
+            #header {
+                padding: 20px 40px;
+            }
+            
+            #prodetails {
+                flex-direction: column;
+            }
+            
+            #prodetails .single-pro-image {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 30px;
+            }
+            
+            #prodetails .single-pro-details {
+                width: 100%;
+            }
+            
+            footer {
+                padding: 40px;
+            }
+        }
+
+        @media (max-width: 477px) {
+            .section-p1 {
+                padding: 20px;
+            }
+            
+            #header {
+                padding: 15px 20px;
+            }
+            
+            footer {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section id="header">
+        <a href="#" id="back-btn">
+            <i class="fas fa-arrow-left"></i> Volver a Productos
+        </a>
+        <a href="#"><img src="img/logo.png" class="logo" alt="Y&N Logo"></a>
+    </section>
+
+    <section id="prodetails" class="section-p1">
+        <div class="single-pro-image">
+            <img src="img/products/M2.png" id="MainImg" alt="Conjunto 2 Masculino">
+        </div>
+
+        <div class="single-pro-details">
+            <h4>Conjunto 2 Masculino</h4>
+            
+            <div class="product-detail-item">
+                <h5>Tela: Hilo</h5>
+                <div class="color-sample">
+                    <div class="color-swatch" style="background-color: #E8DCC6; border-color: #ccc;"></div>
+                    <div class="color-info">
+                        <span>Camisa: Color #E8DCC6
+                        </span>
+                    </div>
+                </div>       
+                <div class="color-sample">
+                    <div class="color-swatch" style="background-color: #212121; border-color: #ccc;"></div>
+                    <div class="color-info">
+                        <span>Pantalón, Cuello y Puños: Color #212121
+                        </span>
+                    </div>
+                </div>                       
+            </div>
+            
+            <div class="product-detail-item">
+                <h5>Estructura de la Prenda</h5>
+                <span>Camisa con cuello de camisa, mangas largas y pantalón de vestir</span>
+            </div>
+        </div>
+    </section>
+
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logo" src="img/logo.png" alt="">
+            
+        </div>
+
+
+        <div class="col">
+            <h4>Contacto</h4>
+            <p><strong>Teléfono:</strong>  +53 53093482</p>
+            <div class="follow">
+                <h4>Síganos</h4>
+                <div class="icon">
+                    <a href="https://x.com/NelsonYord84206"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/y_ntextiles/"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.pinterest.com/yordankanelson/"><i class="fab fa-pinterest-p"></i></a>
+                    <a href="https://www.youtube.com/@YordankaNelson"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="copyright">
+            <p> @ 2024, Y&N, todo en textiles</p>
+        </div>
+    </footer>
+
+    <script>
+        // Script para el botón de regresar
+        document.getElementById('back-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            // Aquí puedes cambiar la URL a la que debe dirigir el botón de regresar
+            window.location.href = 'products.html';
+        });
+    </script>
+</body>
+
+</html>
