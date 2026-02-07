@@ -1,5 +1,5 @@
 # TodoenTextiles
-página promocional
+
  🚀 Agregar Nuevo Producto
 Paso 1: Acceso al Panel
 Abre el archivo admin.html en tu navegador
