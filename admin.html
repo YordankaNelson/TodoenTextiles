@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Y&N</title>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .admin-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .admin-header h1 {
+            font-size: 24px;
+        }
+
+        .btn-volver {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .btn-volver:hover {
+            background-color: #2980b9;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .btn-agregar {
+            background-color: #27ae60;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3);
+            transition: all 0.3s;
+        }
+
+        .btn-agregar:hover {
+            background-color: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .producto-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .producto-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .producto-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .producto-info {
+            padding: 20px;
+        }
+
+        .producto-info h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+
+        .producto-info p {
+            color: #7f8c8d;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .producto-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-editar, .btn-eliminar {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-editar {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-editar:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-eliminar {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-eliminar:hover {
+            background-color: #c0392b;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 3% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 22px;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #ecf0f1;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .colores-container {
+            border: 2px dashed #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .color-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .btn-agregar-color {
+            background-color: #3498db;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .btn-eliminar-color {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid #ecf0f1;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-cancelar, .btn-guardar {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-cancelar {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .btn-cancelar:hover {
+            background-color: #7f8c8d;
+        }
+
+        .btn-guardar {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .btn-guardar:hover {
+            background-color: #229954;
+        }
+
+        .no-productos {
+            text-align: center;
+            padding: 60px 20px;
+            color: #95a5a6;
+            font-size: 18px;
+        }
+
+        /* Vista previa de imagen */
+        .image-preview {
+            width: 150px;
+            height: 150px;
+            border: 2px dashed #ecf0f1;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview-placeholder {
+            color: #95a5a6;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <h1><i class="fas fa-cog"></i> Panel de Administración</h1>
+        <a href="catalogo.html" class="btn-volver">
+            <i class="fas fa-arrow-left"></i> Volver al Catálogo
+        </a>
+    </div>
+
+    <div class="admin-container">
+        <button class="btn-agregar" onclick="abrirModal()">
+            <i class="fas fa-plus"></i> Agregar Nuevo Producto
+        </button>
+
+        <div class="productos-grid" id="productos-grid">
+            <!-- Los productos se cargarán aquí -->
+        </div>
+    </div>
+
+    <!-- Modal para agregar/editar producto -->
+    <div id="modal-producto" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-titulo">Agregar Producto</h2>
+                <span class="close" onclick="cerrarModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="form-producto">
+                    <input type="hidden" id="producto-id">
+                    
+                    <div class="form-group">
+                        <label for="nombre">Nombre del Producto *</label>
+                        <input type="text" id="nombre" required placeholder="Ej: Conjunto 1 Femenino">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categoria">Categoría *</label>
+                        <select id="categoria" required>
+                            <option value="">Seleccionar categoría</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Masculino">Masculino</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="imagen">Ruta de la Imagen *</label>
+                        <input type="text" id="imagen" required placeholder="img/products/producto.png">
+                        <div class="image-preview" id="image-preview">
+                            <div class="image-preview-placeholder">
+                                <i class="fas fa-image" style="font-size: 32px;"></i>
+                                <p style="font-size: 12px; margin-top: 5px;">Vista previa</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tela">Tipo de Tela *</label>
+                        <input type="text" id="tela" required placeholder="Ej: Hilo, Algodón, Poliéster">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Colores de la Prenda</label>
+                        <div class="colores-container" id="colores-container">
+                            <!-- Los colores se agregarán dinámicamente aquí -->
+                        </div>
+                        <button type="button" class="btn-agregar-color" onclick="agregarColor()">
+                            <i class="fas fa-plus"></i> Agregar Color
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estructura">Estructura de la Prenda *</label>
+                        <textarea id="estructura" required placeholder="Describe la estructura y características de la prenda"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+                <button type="button" class="btn-guardar" onclick="guardarProducto()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="productos-data.js"></script>
+    <script>
+        let productoEditando = null;
+
+        // Renderizar productos en el panel de administración
+        function renderizarProductosAdmin() {
+            const grid = document.getElementById('productos-grid');
+            const productos = cargarProductos();
+
+            if (productos.length === 0) {
+                grid.innerHTML = '<div class="no-productos">No hay productos. Agrega tu primer producto.</div>';
+                return;
+            }
+
+            grid.innerHTML = '';
+
+            productos.forEach(producto => {
+                const card = document.createElement('div');
+                card.className = 'producto-card';
+                card.innerHTML = `
+                    <img src="${producto.imagen}" alt="${producto.nombre}" onerror="this.src='img/logo.png'">
+                    <div class="producto-info">
+                        <h3>${producto.nombre}</h3>
+                        <p><strong>Categoría:</strong> ${producto.categoria}</p>
+                        <p><strong>Tela:</strong> ${producto.tela}</p>
+                        <p><strong>Colores:</strong> ${producto.colores ? producto.colores.length : 0}</p>
+                        <div class="producto-actions">
+                            <button class="btn-editar" onclick="editarProducto(${producto.id})">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="btn-eliminar" onclick="confirmarEliminar(${producto.id})">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Abrir modal
+        function abrirModal(producto = null) {
+            const modal = document.getElementById('modal-producto');
+            const titulo = document.getElementById('modal-titulo');
+            
+            if (producto) {
+                titulo.textContent = 'Editar Producto';
+                productoEditando = producto;
+                cargarDatosFormulario(producto);
+            } else {
+                titulo.textContent = 'Agregar Producto';
+                productoEditando = null;
+                document.getElementById('form-producto').reset();
+                document.getElementById('producto-id').value = '';
+                limpiarColores();
+                agregarColor(); // Agregar un color por defecto
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        // Cerrar modal
+        function cerrarModal() {
+            const modal = document.getElementById('modal-producto');
+            modal.style.display = 'none';
+            document.getElementById('form-producto').reset();
+            productoEditando = null;
+        }
+
+        // Agregar campo de color
+        function agregarColor() {
+            const container = document.getElementById('colores-container');
+            const colorItem = document.createElement('div');
+            colorItem.className = 'color-item';
+            colorItem.innerHTML = `
+                <input type="text" placeholder="Parte (ej: Blusa)" class="color-parte">
+                <input type="color" value="#000000" class="color-valor">
+                <input type="text" placeholder="Nombre del color" class="color-nombre">
+                <button type="button" class="btn-eliminar-color" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            container.appendChild(colorItem);
+        }
+
+        // Limpiar colores
+        function limpiarColores() {
+            document.getElementById('colores-container').innerHTML = '';
+        }
+
+        // Cargar datos en el formulario para editar
+        function cargarDatosFormulario(producto) {
+            document.getElementById('producto-id').value = producto.id;
+            document.getElementById('nombre').value = producto.nombre;
+            document.getElementById('categoria').value = producto.categoria;
+            document.getElementById('imagen').value = producto.imagen;
+            document.getElementById('tela').value = producto.tela;
+            document.getElementById('estructura').value = producto.estructura;
+
+            // Cargar vista previa de imagen
+            actualizarVistaPrevia(producto.imagen);
+
+            // Cargar colores
+            limpiarColores();
+            if (producto.colores && producto.colores.length > 0) {
+                producto.colores.forEach(color => {
+                    const container = document.getElementById('colores-container');
+                    const colorItem = document.createElement('div');
+                    colorItem.className = 'color-item';
+                    colorItem.innerHTML = `
+                        <input type="text" placeholder="Parte (ej: Blusa)" class="color-parte" value="${color.parte}">
+                        <input type="color" value="${color.color}" class="color-valor">
+                        <input type="text" placeholder="Nombre del color" class="color-nombre" value="${color.nombre}">
+                        <button type="button" class="btn-eliminar-color" onclick="this.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    container.appendChild(colorItem);
+                });
+            } else {
+                agregarColor();
+            }
+        }
+
+        // Vista previa de imagen
+        document.getElementById('imagen').addEventListener('input', function() {
+            actualizarVistaPrevia(this.value);
+        });
+
+        function actualizarVistaPrevia(src) {
+            const preview = document.getElementById('image-preview');
+            if (src) {
+                preview.innerHTML = `<img src="${src}" alt="Vista previa" onerror="this.parentElement.innerHTML='<div class=\\'image-preview-placeholder\\'><i class=\\'fas fa-exclamation-triangle\\'></i><p>Error al cargar</p></div>'">`;
+            } else {
+                preview.innerHTML = '<div class="image-preview-placeholder"><i class="fas fa-image" style="font-size: 32px;"></i><p style="font-size: 12px; margin-top: 5px;">Vista previa</p></div>';
+            }
+        }
+
+        // Guardar producto
+        function guardarProducto() {
+            const id = document.getElementById('producto-id').value;
+            const nombre = document.getElementById('nombre').value;
+            const categoria = document.getElementById('categoria').value;
+            const imagen = document.getElementById('imagen').value;
+            const tela = document.getElementById('tela').value;
+            const estructura = document.getElementById('estructura').value;
+
+            // Validar campos requeridos
+            if (!nombre || !categoria || !imagen || !tela || !estructura) {
+                alert('Por favor completa todos los campos obligatorios');
+                return;
+            }
+
+            // Recopilar colores
+            const coloresItems = document.querySelectorAll('.color-item');
+            const colores = [];
+            coloresItems.forEach(item => {
+                const parte = item.querySelector('.color-parte').value;
+                const color = item.querySelector('.color-valor').value;
+                const nombreColor = item.querySelector('.color-nombre').value;
+                
+                if (parte && color && nombreColor) {
+                    colores.push({ parte, color, nombre: nombreColor });
+                }
+            });
+
+            const producto = {
+                nombre,
+                categoria,
+                imagen,
+                tela,
+                colores,
+                estructura
+            };
+
+            if (id) {
+                // Actualizar producto existente
+                actualizarProducto(parseInt(id), producto);
+            } else {
+                // Agregar nuevo producto
+                agregarProducto(producto);
+            }
+
+            cerrarModal();
+            renderizarProductosAdmin();
+        }
+
+        // Editar producto
+        function editarProducto(id) {
+            const producto = obtenerProductoPorId(id);
+            if (producto) {
+                abrirModal(producto);
+            }
+        }
+
+        // Confirmar eliminación
+        function confirmarEliminar(id) {
+            const producto = obtenerProductoPorId(id);
+            if (confirm(`¿Estás seguro de que deseas eliminar "${producto.nombre}"?`)) {
+                eliminarProducto(id);
+                renderizarProductosAdmin();
+            }
+        }
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal-producto');
+            if (event.target == modal) {
+                cerrarModal();
+            }
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            renderizarProductosAdmin();
+        });
+    </script>
+</body>
+</html>

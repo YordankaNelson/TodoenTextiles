@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo - Y&N</title>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #bf3154;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(191, 49, 84, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .admin-button:hover {
+            background-color: #9e2643;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(191, 49, 84, 0.4);
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 25px;
+            border: 2px solid #088178;
+            background-color: white;
+            color: #088178;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background-color: #088178;
+            color: white;
+        }
+
+        .no-products {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <section id="header">
+        <a href="#"><img src="img/logo.png" class="logo"></a>
+        <div>
+            <ul id="navbar">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="about.html">Info</a></li>
+                <li><a class="active" href="catalogo.html">Catálogo</a></li>
+                <li><a href="contact.html">Contacto</a></li>
+                <a href="#" id="close"><i class="far fa-times"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <i id="bar" class="fas fa-outdent"></i>
+        </div>
+    </section>
+
+    <section id="product1" class="section-p1">
+        <h2>Catálogo de Uniformes</h2>
+        <p>Diseño, Realización y Personalización de productos textiles</p>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="todos">Todos</button>
+            <button class="filter-btn" data-filter="Femenino">Femenino</button>
+            <button class="filter-btn" data-filter="Masculino">Masculino</button>
+        </div>
+
+        <div class="pro-container" id="productos-container">
+            <!-- Los productos se cargarán dinámicamente aquí -->
+        </div>
+    </section>
+
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logo" src="img/logo.png" alt="">
+            <h4>Contacto</h4>
+            <p><strong>Dirección: </strong> Calle 26 #2107</p>
+            <p><strong>Teléfono:</strong> +53 53093482</p>
+            <p><strong>Horario:</strong> 9:00 - 17:00, Lunes - Sábado</p>
+        </div>
+
+        <div class="col">
+            <h4>Acerca de</h4>
+            <a href="#">Sobre Nosotros</a>
+            <a href="#">Información de Entrega</a>
+            <a href="#">Política de Privacidad</a>
+            <a href="#">Términos y Condiciones</a>
+            <a href="#">Contáctanos</a>
+        </div>
+
+        <div class="col">
+            <h4>Mi Cuenta</h4>
+            <a href="#">Iniciar Sesión</a>
+            <a href="#">Ver Catálogo</a>
+        </div>
+
+        <div class="col install">
+            <h4>Síganos</h4>
+            <div class="row">
+                <a href="https://x.com/NelsonYord84206"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.instagram.com/y_ntextiles/"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.pinterest.com/yordankanelson/"><i class="fab fa-pinterest-p"></i></a>
+                <a href="https://www.youtube.com/@YordankaNelson"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <p>© 2024, Y&N, todo en textiles</p>
+        </div>
+    </footer>
+
+    <button class="admin-button" onclick="window.location.href='admin.html'">
+        <i class="fas fa-cog"></i> Admin
+    </button>
+
+    <script src="productos-data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        let filtroActual = 'todos';
+
+        // Función para renderizar productos
+        function renderizarProductos(filtro = 'todos') {
+            const container = document.getElementById('productos-container');
+            const productos = cargarProductos();
+            
+            // Filtrar productos
+            const productosFiltrados = filtro === 'todos' 
+                ? productos 
+                : productos.filter(p => p.categoria === filtro);
+
+            // Limpiar container
+            container.innerHTML = '';
+
+            if (productosFiltrados.length === 0) {
+                container.innerHTML = '<div class="no-products">No hay productos en esta categoría</div>';
+                return;
+            }
+
+            // Crear elementos de productos
+            productosFiltrados.forEach(producto => {
+                const div = document.createElement('div');
+                div.className = 'pro';
+                div.innerHTML = `
+                    <a href="producto-detalle.html?id=${producto.id}">
+                        <img src="${producto.imagen}" alt="${producto.nombre}">
+                    </a>
+                    <div class="des">
+                        <span>${producto.nombre}</span>
+                        <h5>${producto.categoria}</h5>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Función para manejar filtros
+        function configurarFiltros() {
+            const botonesFiltro = document.querySelectorAll('.filter-btn');
+            
+            botonesFiltro.forEach(boton => {
+                boton.addEventListener('click', function() {
+                    // Remover clase active de todos los botones
+                    botonesFiltro.forEach(b => b.classList.remove('active'));
+                    
+                    // Agregar clase active al botón clickeado
+                    this.classList.add('active');
+                    
+                    // Obtener filtro y renderizar
+                    const filtro = this.getAttribute('data-filter');
+                    filtroActual = filtro;
+                    renderizarProductos(filtro);
+                });
+            });
+        }
+
+        // Inicializar al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            renderizarProductos('todos');
+            configurarFiltros();
+        });
+    </script>
+</body>
+</html>
